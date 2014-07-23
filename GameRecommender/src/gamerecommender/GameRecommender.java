@@ -17,6 +17,7 @@ public class GameRecommender {
     
     double overallAverage;
     double lambda = 0.02;
+    double roe = 0.005;
 
     /**
      * @param args the command line arguments
@@ -72,8 +73,7 @@ public class GameRecommender {
      * @return 
      */
     public double meanError(double oldValue, double bu, double bi){
-        return (Math.pow(oldValue - overallAverage - bu - bi, 2.0) + 
-                lambda*Math.pow(bu, 2.0) + lambda*Math.pow(bi, 2.0));
+        return (oldValue - overallAverage - bu - bi);
     }
     
     /**
@@ -91,9 +91,9 @@ public class GameRecommender {
     }
     
     /**
-     * the set of derived equations used to find better bu and bi
+     * thederived equations used to find a better bu
      */
-    public void gradientDescent(){
+    public void gradientDescentBu(){
         
     }
     
