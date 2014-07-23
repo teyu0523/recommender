@@ -15,7 +15,8 @@ import java.util.ArrayList;
  */
 public class GameRecommender {
     
-    float overallAverage;
+    double overallAverage;
+    double lambda = 0.02;
 
     /**
      * @param args the command line arguments
@@ -50,17 +51,48 @@ public class GameRecommender {
         
     }
     
-    
-    public float baseline(float bu, float bi){
+    /**
+     * Used to calculate the predicted rating of given user and video game
+     * @param bu
+     * @param bi
+     * @return 
+     */
+    public double baseline(double bu, double bi){
         
         return (overallAverage + bu + bi);
         
     }
     
+    /**
+     * calculates the mean error of given rating and predicted rating 
+     * 
+     * @param oldValue
+     * @param bu
+     * @param bi
+     * @return 
+     */
+    public double meanError(double oldValue, double bu, double bi){
+        return (Math.pow(oldValue - overallAverage - bu - bi, 2.0) + 
+                lambda*Math.pow(bu, 2.0) + lambda*Math.pow(bi, 2.0));
+    }
+    
+    /**
+     * Used to refine bu and bi over 30 interations
+     */
     public void minimizeError(){
+        
+        int i;
+        
+        //iterate 30 times to minimize bu and bi
+        for(i = 0; i < 30; i++){
+            //Some logic here
+        }
         
     }
     
+    /**
+     * the set of derived equations used to find better bu and bi
+     */
     public void gradientDescent(){
         
     }
