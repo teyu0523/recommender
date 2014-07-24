@@ -26,6 +26,11 @@ public class GameRecommender {
         
         //Read in CSV file
         
+        //for every empty rating for a user
+            //create a random bu and bi for that position
+            //calculate the random basline: baseRating
+            //minimizeError(baseRating, bu, bi);
+        
         
         
     }
@@ -58,9 +63,9 @@ public class GameRecommender {
      * @param bi
      * @return 
      */
-    public double baseline(double bu, double bi){
+    public double baseline(double BuBi[]){
         
-        return (overallAverage + bu + bi);
+        return (overallAverage + BuBi[0] + BuBi[1]);
         
     }
     
@@ -72,29 +77,37 @@ public class GameRecommender {
      * @param bi
      * @return 
      */
-    public double meanError(double oldValue, double bu, double bi){
-        return (oldValue - overallAverage - bu - bi);
+    public double meanError(double oldValue, double BuBi[]){
+        return (oldValue - overallAverage - BuBi[0] - BuBi[1]);
     }
     
     /**
-     * Used to refine bu and bi over 30 interations
+     * Used to refine bu and bi over 30 iterations
      */
-    public void minimizeError(){
+    public double[] minimizeError(double baseRating, double BuBi[]){
+        
         
         int i;
-        
         //iterate 30 times to minimize bu and bi
         for(i = 0; i < 30; i++){
-            //Some logic here
+           BuBi = StochasticGradientDescent(baseRating, BuBi);
+           baseRating = baseline(BuBi);
         }
         
+        return BuBi;
     }
     
     /**
-     * thederived equations used to find a better bu
+     * returns the more accurate bu and bi using the derived equations 
+     * @param oldValue
+     * @param BuBi
+     * @return 
      */
-    public void gradientDescentBu(){
+    public double[] StochasticGradientDescent(double oldValue, double BuBi[]){
+        BuBi[0] = BuBi[0] + roe*(meanError(oldValue, BuBi) - lambda*BuBi[0]);
+        BuBi[1] = BuBi[1] + roe*(meanError(oldValue, BuBi) - lambda*BuBi[1]);
         
+        return BuBi;
     }
     
 }
