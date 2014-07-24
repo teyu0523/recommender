@@ -7,7 +7,7 @@
 package gamerecommender;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  *
@@ -25,28 +25,33 @@ public class GameRecommender {
     public static void main(String[] args) {
         
         //Read in CSV file
-        
         //for every empty rating for a user
             //create a random bu and bi for that position
             //calculate the random basline: baseRating
             //minimizeError(baseRating, bu, bi);
-        
+        GameRecommender obj = new GameRecommender();
+        List<String[]> users = obj.readCSV();
         
         
     }
     
-    public void readCSV(){
+    public List<String[]> readCSV(){
         
         BufferedReader br;
         String line;
         String semicolon = ";";
         String[] parsedline;
-        
+        List<String[]> users = new LinkedList<String[]>();
+        String[] ratings = null;
         try{
-            br = new BufferedReader(new FileReader("Rankings.csv"));
+            br = new BufferedReader(new FileReader("data.csv"));
             
             //grabs the first row that contains the 
-            line = br.readLine();
+            while((line = br.readLine())!=null){
+                ratings = line.split(",");
+                users.add(ratings);
+            }
+            return(users);
         }
         catch(FileNotFoundException e){
             e.printStackTrace();
@@ -54,7 +59,7 @@ public class GameRecommender {
         catch(IOException e){
             e.printStackTrace();
         }
-        
+        return(null);
     }
     
     /**
