@@ -31,17 +31,40 @@ public class GameRecommender {
             //minimizeError(baseRating, bu, bi);
         GameRecommender obj = new GameRecommender();
         List<String[]> users = obj.readCSV();
-        
-        
+        obj.getAverageRating(users);
     }
     
+    public void getAverageRating(List<String[]> users){
+        /*
+         * Adding all value together and then diving the total number of value exists
+         * 
+         * All zeros are considered to be not rated
+         */
+        int i, j, total=0, count=0;
+        int user_size = users.size();
+        int rating_size = users.get(0).length;
+        for(i=1; i<user_size; i++){
+            for(j=1; j<rating_size; j++){
+                if(users.get(i)[j]!=null && !users.get(i)[j].isEmpty() && Integer.valueOf(users.get(i)[j])!=0){
+                    System.out.println(users.get(i)[j]);
+                    total += Integer.valueOf(users.get(i)[j]);
+                    count++; 
+                }
+            }
+        }
+        if(total!=0){
+            overallAverage = (double)total/(double)count;
+            System.out.println(overallAverage);
+        }
+    }
+
     public List<String[]> readCSV(){
         
         BufferedReader br;
         String line;
         String semicolon = ";";
         String[] parsedline;
-        List<String[]> users = new LinkedList<String[]>();
+        List<String[]> users = new LinkedList<>();
         String[] ratings = null;
         try{
             br = new BufferedReader(new FileReader("data.csv"));
