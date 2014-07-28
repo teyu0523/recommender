@@ -3,9 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-package gamerecommender;
-
 import java.io.*;
 import java.util.*;
 
@@ -42,11 +39,7 @@ public class GameRecommender {
         BuBi = obj.minimizeError(baseRating, BuBi);
         System.out.println("New Bu test: " + BuBi[0]);
         System.out.println("New Bi test: " + BuBi[1]);
-        System.out.println("New Rating After minimizeError: " + obj.baseline(BuBi));
-        
-        
-        
-        
+        System.out.println("New Rating After minimizeError: " + obj.baseline(BuBi));        
     }
     
     public void getAverageRating(List<String[]> users){
@@ -56,10 +49,10 @@ public class GameRecommender {
          * All zeros are considered to be not rated
          */
         int i, j, total=0, count=0;
-        int user_size = users.size();
-        int rating_size = users.get(0).length;
-        for(i=1; i<user_size; i++){
-            for(j=1; j<rating_size; j++){
+        int userSize = users.size();
+        int ratingSize = users.get(0).length;
+        for(i=1; i<userSize; i++){
+            for(j=1; j<ratingSize; j++){
                 if(users.get(i)[j]!=null && !users.get(i)[j].isEmpty() && Integer.valueOf(users.get(i)[j])!=0){
                     System.out.println(users.get(i)[j]);
                     total += Integer.valueOf(users.get(i)[j]);
@@ -120,8 +113,9 @@ public class GameRecommender {
      * @param bi
      * @return 
      */
-    public double meanError(double oldValue, double BuBi[]){
-        return (oldValue - overallAverage - BuBi[0] - BuBi[1]);
+    public double meanError(double baseRating, double BuBi[]){
+        // r - mu - bu - bi
+        return (baseRating - overallAverage - BuBi[0] - BuBi[1]);
     }
     
     /**
@@ -147,6 +141,8 @@ public class GameRecommender {
      * @return 
      */
     public double[] StochasticGradientDescent(double oldValue, double BuBi[]){
+        //bu <-- bu + roe ( eui - lamda1 * bu)
+        //bi <-- bi + roe ( eui - lamda2 * bi)
         BuBi[0] = BuBi[0] + roe*(meanError(oldValue, BuBi) - lambda*BuBi[0]);
         BuBi[1] = BuBi[1] + roe*(meanError(oldValue, BuBi) - lambda*BuBi[1]);
         
