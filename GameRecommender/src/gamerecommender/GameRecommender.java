@@ -33,12 +33,12 @@ public class GameRecommender {
         List<String[]> users = obj.readCSV();
         obj.getAverageRating(users);
         
-        //MinimizeError test
-        double baseRating = 3.0;
+        //MinimizeError tes
         double BuBi[] = new double[2];
         BuBi[0] = 0.5; //test user scores things 0.5 higher then average
         BuBi[1] = -1.0; // test game scores -1.0 below the average
-        System.out.println("base rating test: " + obj.baseline(BuBi));
+        double baseRating = obj.baseline(BuBi);
+        System.out.println("base rating test: " + baseRating);
         BuBi = obj.minimizeError(baseRating, BuBi);
         System.out.println("New Bu test: " + BuBi[0]);
         System.out.println("New Bi test: " + BuBi[1]);
