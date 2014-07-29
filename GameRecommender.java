@@ -11,75 +11,41 @@ import java.util.*;
  * @author Owner
  */
 public class GameRecommender {
-    
-    double overallAverage;
-    double lambda = 0.02;
-    double roe = 0.005;
+
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
-        //Read in CSV file
-        //for every empty rating for a user
-            //create a random bu and bi for that position
-            //calculate the random basline: baseRating
-            //minimizeError(baseRating, bu, bi);
-        GameRecommender obj = new GameRecommender();
-        List<String[]> users = obj.readCSV();
-        obj.getAverageRating(users);
-        
-        //MinimizeError tes
-        double BuBi[] = new double[2];
-        BuBi[0] = 0.5; //test user scores things 0.5 higher then average
-        BuBi[1] = -1.0; // test game scores -1.0 below the average
-        double baseRating = obj.baseline(BuBi);
-        System.out.println("base rating test: " + baseRating);
-        BuBi = obj.minimizeError(baseRating, BuBi);
-        System.out.println("New Bu test: " + BuBi[0]);
-        System.out.println("New Bi test: " + BuBi[1]);
-        System.out.println("New Rating After minimizeError: " + obj.baseline(BuBi));        
+        GameRecommender objGR = new GameRecommender();
+        List<double[]> users = objGR.readCSV();
+        Pearson objPearson = new Pearson();
+        if(users == null){
+            return;
+        }
+        List<double[]> usersFilled = objPearson.populateMissing(users);
+        Baseline objBaseline = new Baseline();
+        objBaseline.populateMissing(users, usersFilled);
     }
     
-    public void getAverageRating(List<String[]> users){
-        /*
-         * Adding all value together and then diving the total number of value exists
-         * 
-         * All zeros are considered to be not rated
-         */
-        int i, j, total=0, count=0;
-        int userSize = users.size();
-        int ratingSize = users.get(0).length;
-        for(i=1; i<userSize; i++){
-            for(j=1; j<ratingSize; j++){
-                if(users.get(i)[j]!=null && !users.get(i)[j].isEmpty() && Integer.valueOf(users.get(i)[j])!=0){
-                    System.out.println(users.get(i)[j]);
-                    total += Integer.valueOf(users.get(i)[j]);
-                    count++; 
-                }
-            }
-        }
-        if(total!=0){
-            overallAverage = (double)total/(double)count;
-            System.out.println(overallAverage);
-        }
-    }
-
-    public List<String[]> readCSV(){
+    public List<double[]> readCSV(){
         
         BufferedReader br;
         String line;
         String semicolon = ";";
         String[] parsedline;
-        List<String[]> users = new LinkedList<>();
-        String[] ratings = null;
+        List<double[]> users = new LinkedList<>();
+        double[] ratings = null;
+        String[] temp = null;
         try{
             br = new BufferedReader(new FileReader("data.csv"));
-            
-            //grabs the first row that contains the 
+            br.readLine();
             while((line = br.readLine())!=null){
-                ratings = line.split(",");
+                temp = line.split(",");
+                ratings = new double[temp.length - 1];
+                for(int i = 1; i<temp.length; i++){
+                    ratings[i-1] = Double.parseDouble(temp[i]);
+                }
                 users.add(ratings);
             }
             return(users);
@@ -92,61 +58,17 @@ public class GameRecommender {
         }
         return(null);
     }
-    
-    /**
-     * Used to calculate the predicted rating of given user and video game
-     * @param bu
-     * @param bi
-     * @return 
-     */
-    public double baseline(double BuBi[]){
         
-        return (overallAverage + BuBi[0] + BuBi[1]);
-        
-    }
-    
-    /**
-     * calculates the mean error of given rating and predicted rating 
-     * 
-     * @param oldValue
-     * @param bu
-     * @param bi
-     * @return 
-     */
-    public double meanError(double baseRating, double BuBi[]){
-        // r - mu - bu - bi
-        return (baseRating - overallAverage - BuBi[0] - BuBi[1]);
-    }
-    
-    /**
-     * Used to refine bu and bi over 30 iterations
-     */
-    public double[] minimizeError(double baseRating, double BuBi[]){
-        
-        
-        int i;
-        //iterate 30 times to minimize bu and bi
-        for(i = 0; i < 30; i++){
-           BuBi = StochasticGradientDescent(baseRating, BuBi);
-           baseRating = baseline(BuBi);
+    public void printTable(List<double[]> users){
+        int userSize = users.size();
+        int itemSize = users.get(1).length;
+        for(int i = 0; i<userSize; i++){
+            System.out.print("\n");
+            for(int j=0; j<itemSize; j++){
+                System.out.print(users.get(i)[j] + " ");
+            }
+            System.out.print("\n");
         }
-        
-        return BuBi;
     }
-    
-    /**
-     * returns the more accurate bu and bi using the derived equations 
-     * @param oldValue
-     * @param BuBi
-     * @return 
-     */
-    public double[] StochasticGradientDescent(double oldValue, double BuBi[]){
-        //bu <-- bu + roe ( eui - lamda1 * bu)
-        //bi <-- bi + roe ( eui - lamda2 * bi)
-        BuBi[0] = BuBi[0] + roe*(meanError(oldValue, BuBi) - lambda*BuBi[0]);
-        BuBi[1] = BuBi[1] + roe*(meanError(oldValue, BuBi) - lambda*BuBi[1]);
-        
-        return BuBi;
-    }
-    
+
 }
