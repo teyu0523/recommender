@@ -39,30 +39,15 @@ public class GameRecommender {
         System.out.println("Enter a User you like to recommend games for.");
 
         //String[] userList = objGR.getUsers(filename);
-        // String[] itemList = objGR.getItems(filename);
         objGR.readCSV(filename, dataBase);
+        List<double[]> usersFilled = new LinkedList<double[]>();
         Pearson objPearson = new Pearson();
-        List<double[]> usersFilled = objPearson.populateMissing(dataBase.getUsers());
         Baseline objBaseline = new Baseline();
-        objBaseline.populateMissing(dataBase.getUsers(), usersFilled);
+        usersFilled = objBaseline.populateMissing(dataBase.getUsers(), usersFilled);
+        objGR.printTable(usersFilled);
+        usersFilled = objPearson.populateMissing(dataBase.getUsers(), usersFilled);
+        objGR.printTable(usersFilled);
     }
-
-    public String[] getItems(String filename){
-        BufferedReader br;
-        String[] itemList = null;
-        try{
-            br = new BufferedReader(new FileReader(filename));
-            itemList = (br.readLine()).split(",");
-        }
-        catch(FileNotFoundException e){
-            e.printStackTrace();
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-        return(null);
-    }
-
 
     public void readCSV(String filename, Data dataBase){
         

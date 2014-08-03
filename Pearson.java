@@ -3,46 +3,67 @@ import java.io.*;
 
 public class Pearson{
 
-	public List<double[]> populateMissing(List<double[]> users){
+	public List<double[]> populateMissing(List<double[]> users, List<double[]> usersFilled){
 		int i, j;
 		int userSize = users.size();
 		int itemSize = users.get(0).length;
+		List<double[]> usersFilledNew = new LinkedList<double[]>();
 		double temp;
-		List<double[]> usersFilled = new LinkedList<double[]>();
-		for(i=0; i<userSize; i++){
-			usersFilled.add(users.get(i).clone());
-		}
-		for(i=0; i<userSize; i++){
-			for(j=0; j<itemSize; j++){
-				if(users.get(i)[j] == 0){
-					temp = pearsonAlgo(i, j, users);
-					System.out.println("Average Sim value: "+temp);
-					if(temp != -1){
-						usersFilled.get(i)[j] = temp;
+
+		if(usersFilled.isEmpty()){
+			System.out.println("Starting pearson first to fillout missing values.");
+			for(i=0; i<userSize; i++){
+				usersFilledNew.add(users.get(i).clone());
+			}
+			for(i=0; i<userSize; i++){
+				for(j=0; j<itemSize; j++){
+					if(users.get(i)[j] == 0){
+						temp = pearsonAlgo(i, j, users);
+						System.out.println("Average Sim value: " + temp + "\n");
+						if(temp != -1){
+							usersFilledNew.get(i)[j] = temp;
+						}
+					}
+				}
+			}
+		} else {
+			System.out.println("Adding pearson on top of previous algorithm.");
+			for(i=0; i<userSize; i++){
+				usersFilledNew.add(usersFilled.get(i).clone());
+			}
+			for(i=0; i<userSize; i++){
+				for(j=0; j<itemSize; j++){
+					if(users.get(i)[j] == 0){
+						temp = pearsonAlgo(i, j, usersFilled);
+						System.out.println("Average Sim value: " + temp + "\n");
+						if(temp != -1){
+							usersFilledNew.get(i)[j] = temp;
+						}
 					}
 				}
 			}
 		}
-		return(usersFilled);
+
+		return(usersFilledNew);
 	}
 
 
-	public double pearsonAlgo(int i_missing, int j_missing, List<double[]> users){
+	public double pearsonAlgo(int iMissing, int jMissing, List<double[]> users){
 		int i, j;
 		int userSize = users.size();
 		int itemSize = users.get(0).length;
-		double itemAverageCount = 0, itemTotalValue = 0;
+		double itemWeightCount = 0, itemTotalValue = 0;
 		double totalRatedItemB = 0, totalRatedItemA = 0, totalRatedItemCountA = 0, totalRatedItemCountB = 0;
 		double averageA, averageB;
 		double simDenomeratorB = 0, simDenomeratorA = 0, simNumerator = 0;
 		double sim;
 		for(i=0; i<userSize; i++){
-			if(i != i_missing && users.get(i)[j_missing] != 0){
+			if(i != iMissing && users.get(i)[jMissing] != 0){
 				for(j=0; j<itemSize; j++) {
-					if(j != j_missing && users.get(i)[j] != 0 && users.get(i_missing)[j] != 0){
+					if(j != jMissing && users.get(i)[j] != 0 && users.get(iMissing)[j] != 0){
 						totalRatedItemCountA++;
 						totalRatedItemCountB++;
-						totalRatedItemA += users.get(i_missing)[j];
+						totalRatedItemA += users.get(iMissing)[j];
 						totalRatedItemB += users.get(i)[j];
 					}
 				}
@@ -50,17 +71,17 @@ public class Pearson{
 					averageA = totalRatedItemA/totalRatedItemCountA;
 					averageB = totalRatedItemB/totalRatedItemCountB;
 					for(j=0; j<itemSize; j++) {
-						if(j != j_missing && users.get(i)[j] != 0 && users.get(i_missing)[j] != 0) {
-							//System.out.println("rap: " + users.get(i_missing)[j] + " avA: " + averageA + " rbp: " + users.get(i)[j] +  " avB: " + averageB);
-							simNumerator += (users.get(i_missing)[j] - averageA) * (users.get(i)[j] - averageB);
-							simDenomeratorB += Math.pow((users.get(i_missing)[j] - averageA), 2);
-							simDenomeratorA += Math.pow((users.get(i)[j] - averageB), 2);
+						if(j != jMissing && users.get(i)[j] != 0 && users.get(iMissing)[j] != 0) {
+							//System.out.println("rap: " + users.get(iMissing)[j] + " avA: " + averageA + " rbp: " + users.get(i)[j] +  " avB: " + averageB);
+							simNumerator += (users.get(iMissing)[j] - averageA) * (users.get(i)[j] - averageB);
+							simDenomeratorA += Math.pow((users.get(iMissing)[j] - averageA), 2);
+							simDenomeratorB += Math.pow((users.get(i)[j] - averageB), 2);
 						}
 					}
 					sim = simNumerator/(Math.sqrt(simDenomeratorA)*Math.sqrt(simDenomeratorB));
-					itemTotalValue += sim*users.get(i)[j_missing];
-					itemAverageCount += sim;
-					System.out.println("sim value: " + sim + " i: " + i);
+					itemTotalValue += sim*users.get(i)[jMissing];
+					itemWeightCount += (+sim);
+					//System.out.println(" i: " + i + " sim value: " + sim + " avgNum: " + itemTotalValue + " avgDen " + itemWeightCount);
 				}
 				totalRatedItemA = 0;
 				totalRatedItemB = 0;
@@ -71,8 +92,9 @@ public class Pearson{
 				simNumerator = 0;
 			}
 		}
-		if(itemAverageCount != 0){
-			return(itemTotalValue/itemAverageCount);
+		if(itemWeightCount != 0){
+			System.out.println(itemTotalValue + "   " + itemWeightCount);
+			return(itemTotalValue/itemWeightCount);
 		}
 		return(-1);
 	}
