@@ -7,9 +7,10 @@ public class Pearson{
 		int i, j;
 		int userSize = users.size();
 		int itemSize = users.get(0).length;
+		List<double[]> usersFilledNew = new LinkedList<double[]>();
 		double temp;
 		for(i=0; i<userSize; i++){
-			usersFilled.add(users.get(i).clone());
+			usersFilledNew.add(users.get(i).clone());
 		}
 		for(i=0; i<userSize; i++){
 			for(j=0; j<itemSize; j++){
@@ -21,12 +22,12 @@ public class Pearson{
 					}
 					System.out.println("Average Sim value: "+temp);
 					if(temp != -1){
-						usersFilled.get(i)[j] = temp;
+						usersFilledNew.get(i)[j] = temp;
 					}
 				}
 			}
 		}
-		return(usersFilled);
+		return(usersFilledNew);
 	}
 
 
