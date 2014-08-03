@@ -20,26 +20,38 @@ public class GameRecommender {
         GameRecommender objGR = new GameRecommender();
         Data dataBase = new Data();
         String filename = "data.csv";
-        String requestedUser;
-        int method = 0;
+        String requestedUser = "";
+        String method = "";
+        boolean isUserThere = false;
 
         Scanner in = new Scanner(System.in);
 
         //Ask User which method they want to use 
-        // System.out.println("Please select which method GameRecommender will use.\n1.) Pearson/Baseline\n2.) Baseline/Pearson");
-        // while(method != 1 || method != 2){
-        //     method = Integer.parseInt(in.nextLine());
-        //     if(method != 1 || method != 2){
-        //         System.out.println("Invalid input. Try again");                
-        //     }
+        System.out.println("Please select which method GameRecommender will use.\n1.) Pearson/Baseline\n2.) Baseline/Pearson");
+        while(!method.equals("1") || !method.equals("2")){
+            method = in.nextLine();
+            if((method.equals("1")) || (method.equals("2"))){
+               break;                
+            }
+            System.out.println("Invalid input. Try again");
 
-        // }
-
-
-        System.out.println("Enter a User you like to recommend games for.");
+        }
 
         //String[] userList = objGR.getUsers(filename);
         objGR.readCSV(filename, dataBase);
+
+        //ask User for a username
+        System.out.println("Enter a User you like to recommend games for.");
+        while(objGR.checkUser(requestedUser, dataBase) == false){
+            requestedUser = in.nextLine();
+            if(objGR.checkUser(requestedUser, dataBase) == true){
+                break;
+            }
+            else{
+                System.out.println("User not found. Try again");    
+            }
+        }
+
         List<double[]> usersFilled = new LinkedList<double[]>();
         Pearson objPearson = new Pearson();
         Baseline objBaseline = new Baseline();
@@ -93,6 +105,20 @@ public class GameRecommender {
             e.printStackTrace();
         }
         //return(null);
+    }
+
+    public boolean checkUser(String user, Data dataBase){
+
+        List<String> userList = dataBase.getUserList();
+        int size = dataBase.getUserList().size();
+        for(int i = 0; i < size; i++){
+            if(user.equals(userList.get(i)) == true){
+                return true;
+            }
+            
+        }
+
+        return false;
     }
         
     public void printTable(List<double[]> users){

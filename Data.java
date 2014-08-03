@@ -24,11 +24,11 @@ public class Data {
 		return usersFilled;
 	}
 
-	public void setItemList(String[] itemlist){
+	public void setItemList(String[] itemList){
 		this.itemList = itemList;
 	}
 
-	public void setUserList(List<String> userlist){
+	public void setUserList(List<String> userList){
 		this.userList = userList;
 	}
 
