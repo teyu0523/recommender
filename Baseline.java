@@ -18,67 +18,68 @@ public class Baseline{
         double baselineResult;
         int i;
         List<double[]> usersFilledNew = new LinkedList<double[]>();
-        for(i=0; i<userSize; i++){
-            usersFilledNew.add(usersFilled.get(i).clone());
-        }
+
         if(usersFilled.isEmpty()){
+            for(i=0; i<userSize; i++){
+                usersFilledNew.add(users.get(i).clone());
+            }
             getAverageRating(users);
+            for(i=0; i<userSize; i++){
+                for(int j=0; j<itemSize; j++){
+                    if(users.get(i)[j] == 0){
+                        BuBi = getBuBi(i, j, userSize, itemSize, users);
+                        System.out.println("Initital Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
+                        baseRating = baseline(BuBi);
+                        System.out.println("base rating: " + users.get(i)[j]);
+                        BuBi = minimizeError(users.get(i)[j], BuBi);
+                        baselineResult = baseline(BuBi);
+                        usersFilledNew.get(i)[j] = baselineResult;
+                        System.out.println("New Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
+                        System.out.println("New rating after minimizeError: " + baselineResult + "\n");  
+                    }
+                }
+            }
         }else{
+            for(i=0; i<userSize; i++){
+                usersFilledNew.add(usersFilled.get(i).clone());
+            }
             getAverageRating(usersFilled);
-        }
-        for(i=0; i<userSize; i++){
-            for(int j=0; j<itemSize; j++){
-                if(users.get(i)[j] == 0){
-                    BuBi = getBuBi(i, j, userSize, itemSize, usersFilled, users);
-                    System.out.println("Initital Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
-                    baseRating = baseline(BuBi);
-                    System.out.println("base rating: " + usersFilled.get(i)[j]);
-                    BuBi = minimizeError(usersFilled.get(i)[j], BuBi);
-                    baselineResult = baseline(BuBi);
-                    usersFilledNew.get(i)[j] = baselineResult;
-                    System.out.println("New Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
-                    System.out.println("New rating after minimizeError: " + baselineResult + "\n");  
+            for(i=0; i<userSize; i++){
+                for(int j=0; j<itemSize; j++){
+                    if(users.get(i)[j] == 0){
+                        BuBi = getBuBi(i, j, userSize, itemSize, usersFilled);
+                        System.out.println("Initital Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
+                        baseRating = baseline(BuBi);
+                        System.out.println("base rating: " + usersFilled.get(i)[j]);
+                        BuBi = minimizeError(usersFilled.get(i)[j], BuBi);
+                        baselineResult = baseline(BuBi);
+                        usersFilledNew.get(i)[j] = baselineResult;
+                        System.out.println("New Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
+                        System.out.println("New rating after minimizeError: " + baselineResult + "\n");  
+                    }
                 }
             }
         }
+        
         return(usersFilledNew);
     }
     
-    public double[] getBuBi(int iMissing, int jMissing, int userSize, int itemSize, List<double[]> usersFilled, List<double[]> users){
+    public double[] getBuBi(int iMissing, int jMissing, int userSize, int itemSize, List<double[]> users){
         double BuBi[] = new double[2];
         double totalRating = 0, totalCount = 0;
-
-        if(usersFilled.isEmpty()){
-            for(int j = 0; j<itemSize; j++){
-                if(j != jMissing){
-                    totalRating += users.get(iMissing)[j];
-                    totalCount++;
-                }
-            }
-        } else {
-            for(int j = 0; j<itemSize; j++){
-                if(j != jMissing){
-                    totalRating += usersFilled.get(iMissing)[j];
-                    totalCount++;
-                }
+        for(int j = 0; j<itemSize; j++){
+            if(j != jMissing){
+                totalRating += users.get(iMissing)[j];
+                totalCount++;
             }
         }
         BuBi[0] =  totalRating/totalCount - overallAverage;
         totalRating = 0;
         totalCount = 0;
-        if(usersFilled.isEmpty()){
-            for(int i = 0; i<userSize; i++){
-                if(i != iMissing){
-                    totalRating += users.get(i)[jMissing];
-                    totalCount++;
-                }
-            }
-        } else {
-            for(int i = 0; i<userSize; i++){
-                if(i != iMissing){
-                    totalRating += usersFilled.get(i)[jMissing];
-                    totalCount++;
-                }
+        for(int i = 0; i<userSize; i++){
+            if(i != iMissing){
+                totalRating += users.get(i)[jMissing];
+                totalCount++;
             }
         }
         BuBi[1] = totalRating/totalCount - overallAverage;

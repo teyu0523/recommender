@@ -9,24 +9,39 @@ public class Pearson{
 		int itemSize = users.get(0).length;
 		List<double[]> usersFilledNew = new LinkedList<double[]>();
 		double temp;
-		for(i=0; i<userSize; i++){
-			usersFilledNew.add(users.get(i).clone());
-		}
-		for(i=0; i<userSize; i++){
-			for(j=0; j<itemSize; j++){
-				if(users.get(i)[j] == 0){
-					if(usersFilled.isEmpty()){
+
+		if(usersFilled.isEmpty()){
+			for(i=0; i<userSize; i++){
+				usersFilledNew.add(users.get(i).clone());
+			}
+			for(i=0; i<userSize; i++){
+				for(j=0; j<itemSize; j++){
+					if(users.get(i)[j] == 0){
 						temp = pearsonAlgo(i, j, users);
-					} else {
-						temp = pearsonAlgo(i, j, usersFilled);
+						System.out.println("Average Sim value: "+temp);
+						if(temp != -1){
+							usersFilledNew.get(i)[j] = temp;
+						}
 					}
-					System.out.println("Average Sim value: "+temp);
-					if(temp != -1){
-						usersFilledNew.get(i)[j] = temp;
+				}
+			}
+		} else {
+			for(i=0; i<userSize; i++){
+				usersFilledNew.add(usersFilled.get(i).clone());
+			}
+			for(i=0; i<userSize; i++){
+				for(j=0; j<itemSize; j++){
+					if(users.get(i)[j] == 0){
+						temp = pearsonAlgo(i, j, usersFilled);
+						System.out.println("Average Sim value: "+temp);
+						if(temp != -1){
+							usersFilledNew.get(i)[j] = temp;
+						}
 					}
 				}
 			}
 		}
+
 		return(usersFilledNew);
 	}
 
