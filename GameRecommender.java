@@ -25,8 +25,10 @@ public class GameRecommender {
         List<double[]> usersFilled = new LinkedList<double[]>();
         Pearson objPearson = new Pearson();
         Baseline objBaseline = new Baseline();
-        usersFilled = objPearson.populateMissing(users, usersFilled);
         usersFilled = objBaseline.populateMissing(users, usersFilled);
+        objGR.printTable(usersFilled);
+        usersFilled = objPearson.populateMissing(users, usersFilled);
+        objGR.printTable(usersFilled);
     }
 
     /*public List[] getUsers(String filename){
