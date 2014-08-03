@@ -18,32 +18,34 @@ public class GameRecommender {
      */
     public static void main(String[] args) {
         GameRecommender objGR = new GameRecommender();
+        Data dataBase = new Data();
         String filename = "data.csv";
-        //String[] userList = objGR.getUsers(filename);
-        String[] itemList = objGR.getItems(filename);
-        List<double[]> users = objGR.readCSV(filename);
-        Pearson objPearson = new Pearson();
-        List<double[]> usersFilled = objPearson.populateMissing(users);
-        Baseline objBaseline = new Baseline();
-        objBaseline.populateMissing(users, usersFilled);
-    }
+        String requestedUser;
+        int method = 0;
 
-    /*public List[] getUsers(String filename){
-        String[] userList;        
-        String[] temp = null;
-        try{
-            br = new BufferedReader(new FileReader(filename));
-            br.readLine();
-            while((line = br.readLine())!=null){
-                temp = line.split(",");
-                ratings = new double[temp.length - 1];
-                String[] = Double.parseDouble(temp[i]);
-                users
-            }
-            return(users);
-        }
-        return(userList);
-    }*/
+        Scanner in = new Scanner(System.in);
+
+        //Ask User which method they want to use 
+        // System.out.println("Please select which method GameRecommender will use.\n1.) Pearson/Baseline\n2.) Baseline/Pearson");
+        // while(method != 1 || method != 2){
+        //     method = Integer.parseInt(in.nextLine());
+        //     if(method != 1 || method != 2){
+        //         System.out.println("Invalid input. Try again");                
+        //     }
+
+        // }
+
+
+        System.out.println("Enter a User you like to recommend games for.");
+
+        //String[] userList = objGR.getUsers(filename);
+        // String[] itemList = objGR.getItems(filename);
+        objGR.readCSV(filename, dataBase);
+        Pearson objPearson = new Pearson();
+        List<double[]> usersFilled = objPearson.populateMissing(dataBase.getUsers());
+        Baseline objBaseline = new Baseline();
+        objBaseline.populateMissing(dataBase.getUsers(), usersFilled);
+    }
 
     public String[] getItems(String filename){
         BufferedReader br;
@@ -62,27 +64,42 @@ public class GameRecommender {
     }
 
 
-    public List<double[]> readCSV(String filename){
+    public void readCSV(String filename, Data dataBase){
         
         BufferedReader br;
         String line;
         String semicolon = ";";
         String[] parsedline;
+
+        String[] itemList = null;
+        List<String> userList = new LinkedList<String>();
         List<double[]> users = new LinkedList<double[]>();
+        
         double[] ratings = null;
         String[] temp = null;
         try{
             br = new BufferedReader(new FileReader(filename));
-            br.readLine();
+            
+            itemList = (br.readLine()).split(",");
+            dataBase.setItemList(itemList);
+            //br.readLine();
             while((line = br.readLine())!=null){
                 temp = line.split(",");
                 ratings = new double[temp.length - 1];
-                for(int i = 1; i<temp.length; i++){
-                    ratings[i-1] = Double.parseDouble(temp[i]);
+                for(int i = 0; i<temp.length; i++){
+                    if(i == 0){
+                        userList.add(temp[i]);
+                    }
+                    else{
+                        ratings[i-1] = Double.parseDouble(temp[i]);  
+                    }
+                    
                 }
                 users.add(ratings);
             }
-            return(users);
+            dataBase.setUserList(userList);
+            dataBase.setUsers(users);
+            //return(users);
         }
         catch(FileNotFoundException e){
             e.printStackTrace();
@@ -90,7 +107,7 @@ public class GameRecommender {
         catch(IOException e){
             e.printStackTrace();
         }
-        return(null);
+        //return(null);
     }
         
     public void printTable(List<double[]> users){
