@@ -26,7 +26,7 @@ public class GameRecommender {
         Pearson objPearson = new Pearson();
         usersFilled = objPearson.populateMissing(users, usersFilled);
         Baseline objBaseline = new Baseline();
-        objBaseline.populateMissing(users, usersFilled);
+        usersFilled = objBaseline.populateMissing(users, usersFilled);
     }
 
     /*public List[] getUsers(String filename){

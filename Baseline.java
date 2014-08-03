@@ -6,7 +6,7 @@ public class Baseline{
     double overallAverage;
     double lambda = 0.02;
     double roe = 0.005;
-    public void populateMissing(List<double[]> users, List<double[]> usersFilled){
+    public List<double[]> populateMissing(List<double[]> users, List<double[]> usersFilled){
         //for every empty rating for a user
             //create a random bu and bi for that position
             //calculate the random basline: baseRating
@@ -15,45 +15,70 @@ public class Baseline{
         int userSize = users.size();
         int itemSize = users.get(0).length;
         double baseRating;
-
-        getAverageRating(users);
-
-        for(int i=0; i<userSize; i++){
+        double baselineResult;
+        int i;
+        List<double[]> usersFilledNew = new LinkedList<double[]>();
+        for(i=0; i<userSize; i++){
+            usersFilledNew.add(usersFilled.get(i).clone());
+        }
+        if(usersFilled.isEmpty()){
+            getAverageRating(users);
+        }else{
+            getAverageRating(usersFilled);
+        }
+        for(i=0; i<userSize; i++){
             for(int j=0; j<itemSize; j++){
                 if(users.get(i)[j] == 0){
-                    if(usersFilled.isEmpty()){
-                        BuBi = getBuBi(i, j, userSize, itemSize, users);
-                    } else {
-                        BuBi = getBuBi(i, j, userSize, itemSize, usersFilled);
-                    }
+                    BuBi = getBuBi(i, j, userSize, itemSize, usersFilled, users);
                     System.out.println("Initital Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
                     baseRating = baseline(BuBi);
                     System.out.println("base rating: " + usersFilled.get(i)[j]);
                     BuBi = minimizeError(usersFilled.get(i)[j], BuBi);
+                    baselineResult = baseline(BuBi);
+                    usersFilledNew.get(i)[j] = baselineResult;
                     System.out.println("New Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
-                    System.out.println("New rating after minimizeError: " + baseline(BuBi) + "\n");  
+                    System.out.println("New rating after minimizeError: " + baselineResult + "\n");  
                 }
             }
         }
-
+        return(usersFilledNew);
     }
     
-    public double[] getBuBi(int i_missing, int j_missing, int userSize, int itemSize, List<double[]> usersFilled){
+    public double[] getBuBi(int iMissing, int jMissing, int userSize, int itemSize, List<double[]> usersFilled, List<double[]> users){
         double BuBi[] = new double[2];
         double totalRating = 0, totalCount = 0;
-        for(int j = 0; j<itemSize; j++){
-            if(j != j_missing){
-                totalRating += usersFilled.get(i_missing)[j];
-                totalCount++;
+
+        if(usersFilled.isEmpty()){
+            for(int j = 0; j<itemSize; j++){
+                if(j != jMissing){
+                    totalRating += users.get(iMissing)[j];
+                    totalCount++;
+                }
+            }
+        } else {
+            for(int j = 0; j<itemSize; j++){
+                if(j != jMissing){
+                    totalRating += usersFilled.get(iMissing)[j];
+                    totalCount++;
+                }
             }
         }
         BuBi[0] =  totalRating/totalCount - overallAverage;
         totalRating = 0;
         totalCount = 0;
-        for(int i = 0; i<userSize; i++){
-            if(i != i_missing){
-                totalRating += usersFilled.get(i)[j_missing];
-                totalCount++;
+        if(usersFilled.isEmpty()){
+            for(int i = 0; i<userSize; i++){
+                if(i != iMissing){
+                    totalRating += users.get(i)[jMissing];
+                    totalCount++;
+                }
+            }
+        } else {
+            for(int i = 0; i<userSize; i++){
+                if(i != iMissing){
+                    totalRating += usersFilled.get(i)[jMissing];
+                    totalCount++;
+                }
             }
         }
         BuBi[1] = totalRating/totalCount - overallAverage;
