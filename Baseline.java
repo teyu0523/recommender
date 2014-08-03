@@ -24,8 +24,8 @@ public class Baseline{
                     BuBi = getBuBi(i, j, userSize, itemSize, usersFilled);
                     System.out.println("Initital Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
                     baseRating = baseline(BuBi);
-                    System.out.println("base rating: " + baseRating);
-                    BuBi = minimizeError(baseRating, BuBi);
+                    System.out.println("base rating: " + usersFilled.get(i)[j]);
+                    BuBi = minimizeError(usersFilled.get(i)[j], BuBi);
                     System.out.println("New Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
                     System.out.println("New rating after minimizeError: " + baseline(BuBi) + "\n");  
                 }
@@ -38,17 +38,21 @@ public class Baseline{
         double BuBi[] = new double[2];
         double totalRating = 0, totalCount = 0;
         for(int j = 0; j<itemSize; j++){
-            totalRating += usersFilled.get(i_missing)[j];
-            totalCount++;
+            if(j != j_missing){
+                totalRating += usersFilled.get(i_missing)[j];
+                totalCount++;
+            }
         }
-        BuBi[0] = overallAverage - totalRating/totalCount;
+        BuBi[0] =  totalRating/totalCount - overallAverage;
         totalRating = 0;
         totalCount = 0;
         for(int i = 0; i<userSize; i++){
-            totalRating += usersFilled.get(i)[j_missing];
-            totalCount++;
+            if(i != i_missing){
+                totalRating += usersFilled.get(i)[j_missing];
+                totalCount++;
+            }
         }
-        BuBi[1] = overallAverage - totalRating/totalCount;
+        BuBi[1] = totalRating/totalCount - overallAverage;
         return(BuBi);
     }
 
@@ -71,6 +75,7 @@ public class Baseline{
         }
         if(total!=0){
             overallAverage = total/count;
+            System.out.println("overallAverage: " + overallAverage);
         }
     }
 

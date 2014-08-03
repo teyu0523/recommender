@@ -16,6 +16,7 @@ public class Pearson{
 			for(j=0; j<itemSize; j++){
 				if(users.get(i)[j] == 0){
 					temp = pearsonAlgo(i, j, users);
+					System.out.println("Average Sim value: "+temp);
 					if(temp != -1){
 						usersFilled.get(i)[j] = temp;
 					}
@@ -58,8 +59,8 @@ public class Pearson{
 					}
 					sim = simNumerator/(Math.sqrt(simDenomeratorA)*Math.sqrt(simDenomeratorB));
 					itemTotalValue += sim*users.get(i)[j_missing];
-					itemAverageCount++;
-					//System.out.println("sim value: " + sim + "i: " + i);
+					itemAverageCount += sim;
+					System.out.println("sim value: " + sim + " i: " + i);
 				}
 				totalRatedItemA = 0;
 				totalRatedItemB = 0;

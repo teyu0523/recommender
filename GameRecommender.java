@@ -34,7 +34,7 @@ public class GameRecommender {
         String line;
         String semicolon = ";";
         String[] parsedline;
-        List<double[]> users = new LinkedList<>();
+        List<double[]> users = new LinkedList<double[]>();
         double[] ratings = null;
         String[] temp = null;
         try{
