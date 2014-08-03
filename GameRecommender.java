@@ -18,17 +18,51 @@ public class GameRecommender {
      */
     public static void main(String[] args) {
         GameRecommender objGR = new GameRecommender();
-        List<double[]> users = objGR.readCSV();
+        String filename = "data.csv";
+        //String[] userList = objGR.getUsers(filename);
+        String[] itemList = objGR.getItems(filename);
+        List<double[]> users = objGR.readCSV(filename);
         Pearson objPearson = new Pearson();
-        if(users == null){
-            return;
-        }
         List<double[]> usersFilled = objPearson.populateMissing(users);
         Baseline objBaseline = new Baseline();
         objBaseline.populateMissing(users, usersFilled);
     }
-    
-    public List<double[]> readCSV(){
+
+    /*public List[] getUsers(String filename){
+        String[] userList;        
+        String[] temp = null;
+        try{
+            br = new BufferedReader(new FileReader(filename));
+            br.readLine();
+            while((line = br.readLine())!=null){
+                temp = line.split(",");
+                ratings = new double[temp.length - 1];
+                String[] = Double.parseDouble(temp[i]);
+                users
+            }
+            return(users);
+        }
+        return(userList);
+    }*/
+
+    public String[] getItems(String filename){
+        BufferedReader br;
+        String[] itemList = null;
+        try{
+            br = new BufferedReader(new FileReader(filename));
+            itemList = (br.readLine()).split(",");
+        }
+        catch(FileNotFoundException e){
+            e.printStackTrace();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+        return(null);
+    }
+
+
+    public List<double[]> readCSV(String filename){
         
         BufferedReader br;
         String line;
@@ -38,7 +72,7 @@ public class GameRecommender {
         double[] ratings = null;
         String[] temp = null;
         try{
-            br = new BufferedReader(new FileReader("data.csv"));
+            br = new BufferedReader(new FileReader(filename));
             br.readLine();
             while((line = br.readLine())!=null){
                 temp = line.split(",");
