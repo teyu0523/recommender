@@ -21,7 +21,11 @@ public class Baseline{
         for(int i=0; i<userSize; i++){
             for(int j=0; j<itemSize; j++){
                 if(users.get(i)[j] == 0){
-                    BuBi = getBuBi(i, j, userSize, itemSize, usersFilled);
+                    if(usersFilled.isEmpty()){
+                        BuBi = getBuBi(i, j, userSize, itemSize, users);
+                    } else {
+                        BuBi = getBuBi(i, j, userSize, itemSize, usersFilled);
+                    }
                     System.out.println("Initital Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
                     baseRating = baseline(BuBi);
                     System.out.println("base rating: " + usersFilled.get(i)[j]);

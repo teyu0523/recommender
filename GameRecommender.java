@@ -22,8 +22,9 @@ public class GameRecommender {
         //String[] userList = objGR.getUsers(filename);
         String[] itemList = objGR.getItems(filename);
         List<double[]> users = objGR.readCSV(filename);
+        List<double[]> usersFilled = new LinkedList<double[]>();
         Pearson objPearson = new Pearson();
-        List<double[]> usersFilled = objPearson.populateMissing(users);
+        usersFilled = objPearson.populateMissing(users, usersFilled);
         Baseline objBaseline = new Baseline();
         objBaseline.populateMissing(users, usersFilled);
     }
