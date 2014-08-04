@@ -79,9 +79,11 @@ public class Pearson{
 						}
 					}
 					sim = simNumerator/(Math.sqrt(simDenomeratorA)*Math.sqrt(simDenomeratorB));
-					itemTotalValue += sim*users.get(i)[jMissing];
-					itemWeightCount += (+sim);
-					//System.out.println(" i: " + i + " sim value: " + sim + " avgNum: " + itemTotalValue + " avgDen " + itemWeightCount);
+					if (sim != Double.NaN){
+						itemTotalValue += sim*users.get(i)[jMissing];
+						itemWeightCount += (+sim);
+						//System.out.println(" i: " + i + " sim value: " + sim + " avgNum: " + itemTotalValue + " avgDen " + itemWeightCount);
+					}
 				}
 				totalRatedItemA = 0;
 				totalRatedItemB = 0;
