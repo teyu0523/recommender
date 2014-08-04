@@ -55,10 +55,21 @@ public class GameRecommender {
         List<double[]> usersFilled = new LinkedList<double[]>();
         Pearson objPearson = new Pearson();
         Baseline objBaseline = new Baseline();
-        usersFilled = objBaseline.populateMissing(dataBase.getUsers(), usersFilled);
-        objGR.printTable(usersFilled);
-        usersFilled = objPearson.populateMissing(dataBase.getUsers(), usersFilled);
-        objGR.printTable(usersFilled);
+        objBaseline.getAverageRating(dataBase.getUsers());
+
+
+        if(method.equals("1")){
+            usersFilled = objPearson.populateMissing(dataBase.getUsers(), usersFilled);
+            objGR.printTable(usersFilled);
+            usersFilled = objBaseline.populateMissing(dataBase.getUsers(), usersFilled);
+            objGR.printTable(usersFilled);
+        }
+        else{
+            usersFilled = objBaseline.populateMissing(dataBase.getUsers(), usersFilled);
+            objGR.printTable(usersFilled);
+            usersFilled = objPearson.populateMissing(dataBase.getUsers(), usersFilled);
+            objGR.printTable(usersFilled);
+        }
     }
 
     public void readCSV(String filename, Data dataBase){

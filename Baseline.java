@@ -27,12 +27,20 @@ public class Baseline{
             for(i=0; i<userSize; i++){
                 for(int j=0; j<itemSize; j++){
                     if(users.get(i)[j] == 0){
+                        System.out.println("");
+                        System.out.println("For position: " + i + j);
                         BuBi = getBuBi(i, j, userSize, itemSize, users);
                         System.out.println("Initital Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
                         baseRating = baseline(BuBi);
-                        System.out.println("base rating: " + users.get(i)[j]);
-                        BuBi = minimizeError(users.get(i)[j], BuBi);
+                        System.out.println("base rating: " + baseRating);
+                        BuBi = minimizeError(baseRating, BuBi);
                         baselineResult = baseline(BuBi);
+                        if(baselineResult > 5){
+                            baselineResult = 5;
+                        }
+                        if(baselineResult < 1){
+                            baselineResult = 1;
+                        }
                         usersFilledNew.get(i)[j] = baselineResult;
                         System.out.println("New Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
                         System.out.println("New rating after minimizeError: " + baselineResult + "\n");  
@@ -47,12 +55,20 @@ public class Baseline{
             for(i=0; i<userSize; i++){
                 for(int j=0; j<itemSize; j++){
                     if(users.get(i)[j] == 0){
+                        System.out.println("");
+                        System.out.println("For position: " + i + j);
                         BuBi = getBuBi(i, j, userSize, itemSize, usersFilled);
                         System.out.println("Initital Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
                         baseRating = baseline(BuBi);
-                        System.out.println("base rating: " + usersFilled.get(i)[j]);
-                        BuBi = minimizeError(usersFilled.get(i)[j], BuBi);
+                        System.out.println("base rating: " + baseRating);
+                        BuBi = minimizeError(baseRating, BuBi);
                         baselineResult = baseline(BuBi);
+                        if(baselineResult > 5){
+                            baselineResult = 5;
+                        }
+                        if(baselineResult < 1){
+                            baselineResult = 1;
+                        }
                         usersFilledNew.get(i)[j] = baselineResult;
                         System.out.println("New Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
                         System.out.println("New rating after minimizeError: " + baselineResult + "\n");  
@@ -69,20 +85,34 @@ public class Baseline{
         double totalRating = 0, totalCount = 0;
         for(int j = 0; j<itemSize; j++){
             if(j != jMissing){
+                if(users.get(iMissing)[j] !=0){
                 totalRating += users.get(iMissing)[j];
                 totalCount++;
+                }
             }
         }
-        BuBi[0] =  totalRating/totalCount - overallAverage;
+        if(totalCount != 0){
+            BuBi[0] =  totalRating/totalCount - overallAverage;
+        }
+        else{
+            BuBi[0] = 0;
+        }
         totalRating = 0;
         totalCount = 0;
         for(int i = 0; i<userSize; i++){
             if(i != iMissing){
+                if(users.get(i)[jMissing] != 0){
                 totalRating += users.get(i)[jMissing];
                 totalCount++;
+                }
             }
         }
-        BuBi[1] = totalRating/totalCount - overallAverage;
+        if(totalCount != 0){
+            BuBi[1] = totalRating/totalCount - overallAverage;
+        }
+        else{
+            BuBi[1] = 0;
+        }
         return(BuBi);
     }
 
