@@ -56,7 +56,8 @@ public class Pearson{
 		double totalRatedItemB = 0, totalRatedItemA = 0, totalRatedItemCountA = 0, totalRatedItemCountB = 0;
 		double averageA, averageB;
 		double simDenomeratorB = 0, simDenomeratorA = 0, simNumerator = 0;
-		double sim;
+		double sim, simDenomeratorSqrt;
+
 		for(i=0; i<userSize; i++){
 			if(i != iMissing && users.get(i)[jMissing] != 0){
 				for(j=0; j<itemSize; j++) {
@@ -78,12 +79,14 @@ public class Pearson{
 							simDenomeratorB += Math.pow((users.get(i)[j] - averageB), 2);
 						}
 					}
-					sim = simNumerator/(Math.sqrt(simDenomeratorA)*Math.sqrt(simDenomeratorB));
-					if (sim != Double.NaN){
+					simDenomeratorSqrt = (Math.sqrt(simDenomeratorA)*Math.sqrt(simDenomeratorB));
+					if(simDenomeratorSqrt != 0){
+						sim = simNumerator/simDenomeratorSqrt;
 						itemTotalValue += sim*users.get(i)[jMissing];
 						itemWeightCount += (+sim);
-						//System.out.println(" i: " + i + " sim value: " + sim + " avgNum: " + itemTotalValue + " avgDen " + itemWeightCount);
+						System.out.println(" i: " + i + " sim value: " + sim + " avgNum: " + itemTotalValue + " avgDen " + itemWeightCount);
 					}
+					
 				}
 				totalRatedItemA = 0;
 				totalRatedItemB = 0;
@@ -92,6 +95,7 @@ public class Pearson{
 				totalRatedItemCountA = 0;
 				totalRatedItemCountB = 0;
 				simNumerator = 0;
+				sim = 0;
 			}
 		}
 		if(itemWeightCount != 0){
