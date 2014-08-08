@@ -6,7 +6,6 @@ public class Data {
 	private String[] itemList = null;
 	private List<String> userList = new LinkedList<String>();
 	private List<double[]> users = new LinkedList<double[]>();
-	private List<double[]> usersFilled = new LinkedList<double[]>();  
 
 	public String[] getItemList(){
 		return itemList;
@@ -20,10 +19,6 @@ public class Data {
 		return users;
 	}
 
-	public List<double[]> getuserUsersFilled(){
-		return usersFilled;
-	}
-
 	public void setItemList(String[] itemList){
 		this.itemList = itemList;
 	}
@@ -34,10 +29,6 @@ public class Data {
 
 	public void setUsers(List<double[]> users){
 		this.users = users;
-	}
-
-	public void setUsersFilled(List<double[]> usersList){
-		this.usersFilled = usersFilled;
 	}
 
 }

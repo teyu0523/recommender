@@ -11,7 +11,7 @@ public class Pearson{
 		double temp;
 
 		if(usersFilled.isEmpty()){
-			System.out.println("Starting pearson first to fillout missing values.");
+			//System.out.println("Starting pearson first to fillout missing values.");
 			for(i=0; i<userSize; i++){
 				usersFilledNew.add(users.get(i).clone());
 			}
@@ -19,15 +19,15 @@ public class Pearson{
 				for(j=0; j<itemSize; j++){
 					if(users.get(i)[j] == 0){
 						temp = pearsonAlgo(i, j, users);
-						System.out.println("Average Sim value: " + temp + "\n");
+						//System.out.println("Average Sim value: " + temp + "\n");
 						if(temp != -1){
-							usersFilledNew.get(i)[j] = temp;
+							usersFilledNew.get(i)[j] = Math.floor(temp*1e2)/1e2;
 						}
 					}
 				}
 			}
 		} else {
-			System.out.println("Adding pearson on top of previous algorithm.");
+			//System.out.println("Adding pearson on top of previous algorithm.");
 			for(i=0; i<userSize; i++){
 				usersFilledNew.add(usersFilled.get(i).clone());
 			}
@@ -35,9 +35,9 @@ public class Pearson{
 				for(j=0; j<itemSize; j++){
 					if(users.get(i)[j] == 0){
 						temp = pearsonAlgo(i, j, usersFilled);
-						System.out.println("Average Sim value: " + temp + "\n");
+						//System.out.println("Average Sim value: " + temp + "\n");
 						if(temp != -1){
-							usersFilledNew.get(i)[j] = temp;
+							usersFilledNew.get(i)[j] = Math.floor(temp*1e2)/1e2;
 						}
 					}
 				}
@@ -84,7 +84,7 @@ public class Pearson{
 						sim = simNumerator/simDenomeratorSqrt;
 						itemTotalValue += sim*users.get(i)[jMissing];
 						itemWeightCount += (+sim);
-						System.out.println(" i: " + i + " sim value: " + sim + " avgNum: " + itemTotalValue + " avgDen " + itemWeightCount);
+						//System.out.println(" i: " + i + " sim value: " + sim + " avgNum: " + itemTotalValue + " avgDen " + itemWeightCount);
 					}
 					
 				}
@@ -99,7 +99,7 @@ public class Pearson{
 			}
 		}
 		if(itemWeightCount != 0){
-			System.out.println(itemTotalValue + "   " + itemWeightCount);
+			//System.out.println(itemTotalValue + "   " + itemWeightCount);
 			return(itemTotalValue/itemWeightCount);
 		}
 		return(-1);

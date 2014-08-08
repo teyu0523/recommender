@@ -27,12 +27,12 @@ public class Baseline{
             for(i=0; i<userSize; i++){
                 for(int j=0; j<itemSize; j++){
                     if(users.get(i)[j] == 0){
-                        System.out.println("");
-                        System.out.println("For position: " + i + j);
+                        //System.out.println("");
+                        //System.out.println("For position: " + i + j);
                         BuBi = getBuBi(i, j, userSize, itemSize, users);
-                        System.out.println("Initital Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
+                        //System.out.println("Initital Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
                         baseRating = baseline(BuBi);
-                        System.out.println("base rating: " + baseRating);
+                        //System.out.println("base rating: " + baseRating);
                         BuBi = minimizeError(baseRating, BuBi);
                         baselineResult = baseline(BuBi);
                         if(baselineResult > 5){
@@ -41,9 +41,9 @@ public class Baseline{
                         if(baselineResult < 1){
                             baselineResult = 1;
                         }
-                        usersFilledNew.get(i)[j] = baselineResult;
-                        System.out.println("New Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
-                        System.out.println("New rating after minimizeError: " + baselineResult + "\n");  
+                        usersFilledNew.get(i)[j] = Math.floor(baselineResult*1e2)/1e2;
+                        //System.out.println("New Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
+                        //System.out.println("New rating after minimizeError: " + baselineResult + "\n");  
                     }
                 }
             }
@@ -55,12 +55,12 @@ public class Baseline{
             for(i=0; i<userSize; i++){
                 for(int j=0; j<itemSize; j++){
                     if(users.get(i)[j] == 0){
-                        System.out.println("");
-                        System.out.println("For position: " + i + j);
+                        //System.out.println("");
+                        //System.out.println("For position: " + i + j);
                         BuBi = getBuBi(i, j, userSize, itemSize, usersFilled);
-                        System.out.println("Initital Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
+                        //System.out.println("Initital Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
                         baseRating = baseline(BuBi);
-                        System.out.println("base rating: " + baseRating);
+                        //System.out.println("base rating: " + baseRating);
                         BuBi = minimizeError(baseRating, BuBi);
                         baselineResult = baseline(BuBi);
                         if(baselineResult > 5){
@@ -69,9 +69,9 @@ public class Baseline{
                         if(baselineResult < 1){
                             baselineResult = 1;
                         }
-                        usersFilledNew.get(i)[j] = baselineResult;
-                        System.out.println("New Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
-                        System.out.println("New rating after minimizeError: " + baselineResult + "\n");  
+                        usersFilledNew.get(i)[j] = Math.floor(baselineResult*1e2)/1e2;
+                        //System.out.println("New Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
+                        //System.out.println("New rating after minimizeError: " + baselineResult + "\n");  
                     }
                 }
             }
@@ -135,7 +135,7 @@ public class Baseline{
         }
         if(total!=0){
             overallAverage = total/count;
-            System.out.println("overallAverage: " + overallAverage);
+            //System.out.println("overallAverage: " + overallAverage);
         }
     }
 
