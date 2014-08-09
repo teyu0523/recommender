@@ -61,7 +61,7 @@ public class Baseline{
                         //System.out.println("Initital Bu: " + BuBi[0] + " Bi: " + BuBi[1]);
                         baseRating = baseline(BuBi);
                         //System.out.println("base rating: " + baseRating);
-                        BuBi = minimizeError(baseRating, BuBi);
+                        BuBi = minimizeError(usersFilled.get(i)[j], BuBi);
                         baselineResult = baseline(BuBi);
                         if(baselineResult > 5){
                             baselineResult = 5;
